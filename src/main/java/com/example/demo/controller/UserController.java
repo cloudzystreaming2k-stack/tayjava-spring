@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.request.UserRequestDTO;
 import io.swagger.v3.oas.annotations.headers.Header;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,7 +13,7 @@ import java.util.List;
 public class UserController {
 
     @PostMapping(value = "/")
-    public String addUser(@RequestBody UserRequestDTO userRequestDTO){
+    public String addUser(@Valid @RequestBody UserRequestDTO userRequestDTO){
         return "User added";
     }
 
@@ -22,13 +24,13 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public String changeStatusUser(@PathVariable("userId") int userId, @RequestParam(required = false) boolean status){
+    public String changeStatusUser(@PathVariable("userId") @Min(1) int userId,@Min(1) @RequestParam int status){
         System.out.println("Request change user status, userId là " + userId);
         return "User status changed";
     }
 
     @DeleteMapping("/{userId}")
-    public String deleteUser(@PathVariable("userId") int userId){
+    public String deleteUser(@Min(1) @PathVariable("userId") int userId){
         System.out.println("Delete user có id là " + userId);
         return "User có id là " + userId + " đã được xóa";
     }
