@@ -37,7 +37,7 @@ public class UserRequestDTO  implements Serializable {
     @EnumValue(name = "type", enumClass = UserType.class)
     private String type;
     @NotEmpty
-    private Set<String> permission;
+    private List<String> permission;
 
     public UserRequestDTO(String firstName, String lastName, String phone, String email) {
         this.firstName = firstName;
@@ -86,11 +86,11 @@ public class UserRequestDTO  implements Serializable {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public Set<String> getPermission() {
+    public List<String> getPermission() {
         return permission;
     }
 
-    public void setPermission(Set<String> permission) {
+    public void setPermission(List<String> permission) {
         this.permission = permission;
     }
 
