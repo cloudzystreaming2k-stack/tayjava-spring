@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Min;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/user")
@@ -42,9 +43,9 @@ public class UserController {
     }
 
     @GetMapping("/list")
-    public List<UserRequestDTO> getAllUsers(@RequestParam(defaultValue = "0") int pageNo, @RequestParam(defaultValue = "10") int pageSize){
+    public Set<UserRequestDTO> getAllUsers(@RequestParam(defaultValue = "0") int pageNo, @RequestParam(defaultValue = "10") int pageSize){
         System.out.println("Lây ra danh sách khàng hàng ở trang " + pageNo);
-        return List.of(new UserRequestDTO("1","1","sdt1","mail1@"),
+        return Set.of(new UserRequestDTO("1","1","sdt1","mail1@"),
                         new UserRequestDTO("2","2","sdt2", "mail2@"));
     }
 

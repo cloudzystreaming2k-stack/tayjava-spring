@@ -1,7 +1,7 @@
 package com.example.demo.dto.request;
 
 
-import com.example.demo.util.PhoneNumber;
+import com.example.demo.util.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -10,6 +10,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+
+import static com.example.demo.util.Gender.*;
 
 public class UserRequestDTO  implements Serializable {
     @NotBlank(message = "firstName must not be blank")
@@ -25,8 +28,16 @@ public class UserRequestDTO  implements Serializable {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @JsonFormat(pattern = "MM/dd/yyyy")
     private Date dateOfBirth;
+    //@Pattern(regexp = "^ACTIVE|INACTIVE|NONE$", message = "status must be one in {ACTIVE, INACTIVE, NONE}")
+    @EnumPattern(name = "status", regexp = "ACTIVE|INACTIVE|NONE")
+    private UserStatus status;
+    @GenderSubset(anyOf = {MALE, FEMALE, OTHER})
+    private Gender gender;
+    @NotNull(message = "type must be not null")
+    @EnumValue(name = "type", enumClass = UserType.class)
+    private String type;
     @NotEmpty
-    private List<String> permission;
+    private Set<String> permission;
 
     public UserRequestDTO(String firstName, String lastName, String phone, String email) {
         this.firstName = firstName;
@@ -75,12 +86,35 @@ public class UserRequestDTO  implements Serializable {
         this.dateOfBirth = dateOfBirth;
     }
 
-
-    public List<String> getPermission() {
+    public Set<String> getPermission() {
         return permission;
     }
 
-    public void setPermission(List<String> permission) {
+    public void setPermission(Set<String> permission) {
         this.permission = permission;
+    }
+
+    public UserStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(UserStatus status) {
+        this.status = status;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
