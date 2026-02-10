@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.request.UserRequestDTO;
+import com.example.demo.dto.response.ResponseData;
+import com.example.demo.dto.response.ResponseError;
 import com.example.demo.dto.response.ResponseSuccess;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
@@ -23,56 +25,47 @@ import java.util.Set;
 @Validated
 public class UserController {
 
-    @Operation(summary = "summary",description = "description", responses = {
-            @ApiResponse(responseCode = "201",
-                        description = "Added user success",
-                        content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                           examples = @ExampleObject(name = "ex name", summary = "ex summary",
-                                           value = """
-                                                    {
-                                                        "status": 201,
-                                                        "message": "User added successfully",
-                                                        "data":1
-                                                    }
-                                                   """
-                                           ))
-            )
-    })
+//    @PostMapping(value = "/")
+//    public ResponseSuccess addUser(@Valid @RequestBody UserRequestDTO userRequestDTO){
+//        System.out.println("User được thêm là: " + userRequestDTO.getFirstName());
+//        return new ResponseSuccess(HttpStatus.CREATED, "User added success", 1);
+//    }
     @PostMapping(value = "/")
-    public ResponseSuccess addUser(@Valid @RequestBody UserRequestDTO userRequestDTO){
+    public ResponseData<Integer> addUser(@Valid @RequestBody UserRequestDTO userRequestDTO){
         System.out.println("User được thêm là: " + userRequestDTO.getFirstName());
-        return new ResponseSuccess(HttpStatus.CREATED, "User added success", 1);
+        //return new ResponseError(HttpStatus.BAD_REQUEST.value(), "Can not create user");
+        return new ResponseData<>(HttpStatus.CREATED.value(), "User added success", 1);
     }
 
     @PutMapping("/{userId}")
-    public ResponseSuccess updateUser(@PathVariable("userId") int userId,@RequestBody UserRequestDTO userRequestDTO){
+    public ResponseData<?> updateUser(@PathVariable("userId") int userId,@Valid @RequestBody UserRequestDTO userRequestDTO){
         System.out.println("User update có id = " + userId);
-        return new ResponseSuccess(HttpStatus.ACCEPTED, "User updated success");
+        return new ResponseData<>(HttpStatus.ACCEPTED.value(), "User updated success");
     }
 
     @PatchMapping("/{userId}")
-    public ResponseSuccess changeStatusUser(@PathVariable("userId") @Min(1) int userId, @RequestParam(required = false) boolean status){
+    public ResponseData<?> changeStatusUser(@PathVariable("userId") @Min(1) int userId, @RequestParam(required = false) boolean status){
         System.out.println("Request change user status, userId là " + userId);
-        return new ResponseSuccess(HttpStatus.ACCEPTED, "User status changed success");
+        return new ResponseData<>(HttpStatus.ACCEPTED.value(), "User status changed success");
     }
 
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseSuccess deleteUser(@Min(1) @PathVariable("userId") int userId){
+    public ResponseData<?> deleteUser(@Min(1) @PathVariable("userId") int userId){
         System.out.println("Delete user có id là " + userId);
-        return new ResponseSuccess(HttpStatus.NO_CONTENT, "User deleted success");
+        return new ResponseData<>(HttpStatus.NO_CONTENT.value(), "User deleted success");
     }
 
     @GetMapping("/{userId}")
-    public ResponseSuccess getUser(@PathVariable("userId") int userId){
+    public ResponseData<UserRequestDTO> getUser(@PathVariable("userId") int userId){
         System.out.println("Lây ra userId có id là " + userId);
-        return new ResponseSuccess(HttpStatus.OK, "Get user có id " + userId, new UserRequestDTO("tao", "java", "sdt0123", "ksgoku@gmail.com"));
+        return new ResponseData<UserRequestDTO>(HttpStatus.OK.value(), "Get user có id " + userId, new UserRequestDTO("tao", "java", "sdt0123", "ksgoku@gmail.com"));
     }
 
     @GetMapping("/list")
-    public ResponseSuccess getAllUsers(@RequestParam(defaultValue = "0") int pageNo, @RequestParam(defaultValue = "10") int pageSize){
+    public ResponseData<List<UserRequestDTO>> getAllUsers(@RequestParam(defaultValue = "10") int pageNo, @RequestParam(defaultValue = "20") int pageSize){
         System.out.println("Lây ra danh sách khàng hàng ở trang " + pageNo);
-        return new ResponseSuccess(HttpStatus.OK, "Lây danh sách user",
+        return new ResponseData<List<UserRequestDTO>>(HttpStatus.OK.value(), "Lây danh sách user",
                 List.of(new UserRequestDTO("1","1","sdt1","mail1@"),
                 new UserRequestDTO("2","2","sdt2", "mail2@")));
     }
